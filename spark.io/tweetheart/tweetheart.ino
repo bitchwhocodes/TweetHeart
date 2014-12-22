@@ -1,6 +1,12 @@
 // This #include statement was automatically added by the Spark IDE.
 #include "neopixel/neopixel.h"
 
+// This #include statement was automatically added by the Spark IDE.
+
+
+// This #include statement was automatically added by the Spark IDE.
+
+
 
 #define GRADIENT_SIZE 6
 #define HEART_BEAT_COUNT 10
@@ -10,7 +16,8 @@
 #define PIXEL_COUNT 93
 #define PIXEL_PIN D2
 #define PIXEL_TYPE WS2812B
-
+#define OUTLINE_COUNT 26
+#define INNER_COUNT 20
 
 unsigned long interval=50;  // the time we need to wait
 unsigned long previousMillis=0;
@@ -20,10 +27,10 @@ int setMode(String newMode);
 uint32_t currentColor;// current Color in case we need it
 
 uint16_t currentPixel = 0;// what pixel are we operating on
-uint8_t count = 0; // loop or process counter
-uint8_t heartBeatCounter =0; // used for heartbeat animation
-uint8_t mode = 0; // mode determines what animation we are running
-uint8_t growCount = 0; // to be used
+uint8_t count = 0;
+uint8_t heartBeatCounter =0;
+uint8_t mode = 6;
+uint8_t growCount = 0;
 
 
 
@@ -44,15 +51,30 @@ uint8_t growCount = 0; // to be used
 
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(PIXEL_COUNT, PIXEL_PIN, PIXEL_TYPE);
 
-
-
-uint32_t hotSequence[GRADIENT_SIZE] = {
+uint32_t listSequence[GRADIENT_SIZE] = {
 strip.Color(255,0,0),
-strip.Color(20,255,230),
-strip.Color(255,199,0),
-strip.Color(255, 48, 48),
-strip.Color(255, 102, 0),
-strip.Color(100,100,155)};
+strip.Color(178,178,18),
+strip.Color(28,155,255),
+strip.Color(204,24,20),
+strip.Color(178,12,9),
+strip.Color(125,0,255)};
+
+uint32_t favoriteSequence[GRADIENT_SIZE] = {
+strip.Color(255,225,0),
+strip.Color(206,222,57),
+strip.Color(0,0,0),
+strip.Color(255,0,0),
+strip.Color(206,222,57),
+strip.Color(0,0,0)};
+
+uint32_t followSequence[GRADIENT_SIZE] = {
+strip.Color(190,0,222),
+strip.Color(0,0,0),
+strip.Color(206,222,57),
+strip.Color(0,0,0),
+strip.Color(171,17,58),
+strip.Color(0,0,0)};
+
 uint32_t restingSequence[GRADIENT_SIZE] = {
 strip.Color(255,20,180),
 strip.Color(255,0,0),
@@ -69,19 +91,20 @@ uint8_t second_outline[]={3,5,8,12,15,21,24,33,36,47,50,61,64,69,70,75,78,80,83,
 
 
 int setMode(String newMode){
+   count = 0;
    mode = newMode.toInt();
+   
    
    return 1;
 }
 
 void setup() {
   Spark.function("setMode",setMode);
-  
-  currentColor = red;
+  currentColor = strip.Color(255,0,0);
   currentPixel = 0;
-  // set red to the strip to start with
+  
+ 
   strip.begin();
-
   uint8_t i;
   for(i=0;i<PIXEL_COUNT;i++) {
     strip.setPixelColor(i,currentColor);
@@ -96,66 +119,124 @@ if ((unsigned long)(millis() - previousMillis) >= interval) {
 
    switch(mode){
      case 0:
-        restingWipe();
+        colorWipe(restingSequence);
         break;
-     case 1:
+    case 2:
+        startSequence();
+        break;
+     case 3:
+        colorWipe(favoriteSequence);
+        break;
+    
+    case 4:
+        colorWipe(followSequence);
+        break;
+        
+     case 5:
         heartDrain();
         break;
-     case 2:
+        
+    case 6:
+        growHeart();
+        //colorWipe(listSequence);
+        break;
+        
+     case 7:
          heartBeat();
          break;
-    case 3:
-        growHeart();
-        break;
+    
    }
  }
 }
 
-// grows out pink - gradient
+
+void startSequence(){
+  interval=30;
+ 
+  strip.setPixelColor(PIXEL_COUNT-currentPixel,strip.Color(0,0,255));
+  strip.show();
+  currentPixel++;
+  uint8_t i;
+  if(currentPixel == PIXEL_COUNT){
+    currentPixel = 0;
+     for(i=0;i<PIXEL_COUNT;i++) {
+      
+      strip.setPixelColor(i,red);
+    }
+    count++;
+    if(count>6){
+      
+      mode = 0;
+      count = 0;
+     
+    }
+    //currentColor = restingSequence[count];
+  }
+}
+
 void growHeart(){
     interval = 200;
     uint8_t i;
+    if(count < 5){
     if(growCount<3){
     if(growCount == 0){
         for(i=0;i<PIXEL_COUNT;i++){
-          strip.setPixelColor(i,pink);
+            strip.setPixelColor(i,pink);
         }
         
-         for( i=0;i<20;i++){
-          strip.setPixelColor(second_outline[i],red);  
+         for( i=0;i<20;i++)
+        {
+            strip.setPixelColor(second_outline[i],red);
+            
         }
         
         for(i=0;i<26;i++){
-          strip.setPixelColor(outline[i],red); 
+         strip.setPixelColor(outline[i],red); 
+      
         }
     }
     
-    if(growCount == 1){
-
-        for( i=0;i<20;i++){
-          strip.setPixelColor(second_outline[i],pink);
+    if(growCount == 1)
+    {
+        for( i=0;i<20;i++)
+        {
+            strip.setPixelColor(second_outline[i],pink);
+            
         }
         
         for(i=0;i<26;i++){
-          strip.setPixelColor(outline[i],red); 
+         strip.setPixelColor(outline[i],red); 
+      
         }
     }
     
-    if(growCount == 2){
+    if(growCount ==2)
+    {
+        
+       
+        
         for(i=0;i<26;i++){
-          strip.setPixelColor(outline[i],pink); 
+         strip.setPixelColor(outline[i],pink); 
+      
         }
         
-        for( i=0;i<20;i++){
-          strip.setPixelColor(second_outline[i],pink);
+        for( i=0;i<20;i++)
+        {
+            strip.setPixelColor(second_outline[i],pink);
+            
         }
     }
     growCount++;
     strip.show();
-  }else{
-   // mode = 0;
+}else{
+    count++;
     growCount = 0;
-  }
+}
+}else{
+    count = 0;
+    interval = 50;
+    mode = 0;
+}
     
 }
 
@@ -171,6 +252,7 @@ void heartDrain(){
   if(currentPixel == PIXEL_COUNT){
     currentPixel = 0;
      for(i=0;i<PIXEL_COUNT;i++) {
+      
       strip.setPixelColor(i,currentColor);
     }
     count++;
@@ -223,8 +305,7 @@ void heartBeat(){
 }
 
 
-void restingWipe(){
-  
+void colorWipe(uint32_t colors[]){
   strip.setPixelColor(currentPixel,currentColor);
   strip.show();
   currentPixel++;
@@ -238,7 +319,7 @@ void restingWipe(){
         count = 0;
     }
     
-    currentColor = restingSequence[count];
+    currentColor = colors[count];
    
   }
 }
@@ -254,6 +335,7 @@ uint32_t Wheel(byte WheelPos) {
    return strip.Color(0, WheelPos * 3, 255 - WheelPos * 3);
   }
 }
+
 
 
 
