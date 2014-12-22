@@ -27,10 +27,7 @@ stream.on('disconnect',function(){
   
 })
 stream.on('favorite', function (tweet) {
-  
   Spark.callFunction(process.env.SPARK_ID,'setMode','3',function(err,data){
-    
-
   });
 
 })
@@ -38,10 +35,7 @@ stream.on('favorite', function (tweet) {
 stream.on('follow', function (tweet) {
   console.log('HAS BEEN FOLLOWED',tweet)
   if(tweet['target']['screen_name'] == "bitchwhocodes"){
-    
     Spark.callFunction(process.env.SPARK_ID,'setMode','4',function(err,data){
-    
-
   });
   }
 })
@@ -49,43 +43,26 @@ stream.on('follow', function (tweet) {
 stream.on('unfollow', function (tweet) {
   console.log('HAS BEEN FOLLOWED',tweet)
   if(tweet['target']['screen_name'] == "bitchwhocodes"){
-    
     Spark.callFunction(process.env.SPARK_ID,'setMode','5',function(err,data){
-    
-
   });
   }
 })
 
 stream.on('list_member_added', function (tweet) {
-  
   Spark.callFunction(process.env.SPARK_ID,'setMode','6',function(err,data){
-   
-
   });
 })
 
 
 stream.on('tweet', function (tweet) {
-
-     Spark.callFunction(process.env.SPARK_ID,'setMode','6',function(err,data){
-
+  Spark.callFunction(process.env.SPARK_ID,'setMode','6',function(err,data){
   });
-  if(tweet['retweeted_status']!=null)
-  {
-    
+  if(tweet['retweeted_status']!=null){
     Spark.callFunction(process.env.SPARK_ID,'setMode','7',function(err,data){
-    
-
   });
   }
-  
-  
 })
 
-//});
- 
-//server.listen(3000);
 
 
 
