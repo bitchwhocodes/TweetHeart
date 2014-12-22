@@ -1,6 +1,6 @@
-Tweetlight
+TweetHeart
 ==========
-Tweetlight is a heart shaped light created with Adafruit's NeoPixels that reacts to various events on the Twitter Streaming API. 
+TweetHeat is a heart shaped light created with Adafruit's NeoPixels that reacts to various events on the Twitter Streaming API. 
 It has a few moving parts. 
 1. Hardware : Laser cut box and acrylic to house NeoPixels organized in a heart shape. A SparkCore device is used to power the
 lights, run the animations and capture input from an external source.
