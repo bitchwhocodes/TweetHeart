@@ -29,7 +29,7 @@ uint32_t currentColor;// current Color in case we need it
 uint16_t currentPixel = 0;// what pixel are we operating on
 uint8_t count = 0;
 uint8_t heartBeatCounter =0;
-uint8_t mode = 6;
+uint8_t mode = 0;
 uint8_t growCount = 0;
 
 
